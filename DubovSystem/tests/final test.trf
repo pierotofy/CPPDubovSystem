@@ -1,0 +1,63 @@
+012 Test Tournament
+022 myTown
+032 USA
+042 16/01/2024
+052 16/01/2024
+062 50
+072 50
+082 0
+092 Individual: Swiss-System (Dubov)
+102 myArbiter
+112 
+122 90 minutes + 30 seconds per move
+TNR 5  
+001    1 m    Player 1                          2855 USA           0 0000        3.0   13    26 w 1    42 b 0    18 w 1    22 b =    32 w =
+001    2 m    Player 2                          2800 USA           0 0000        4.0    4    27 b =    33 w 1    25 b 1    29 w =    43 b 1
+001    3 m    Player 3                          2745 USA           0 0000        2.0   40    28 w 0    24 b -     7 b =    33 w =    27 b 1
+001    4 m    Player 4                          2733 USA           0 0000        3.5    9    29 b 0    14 w =    17 b 1    44 w 1    35 b 1
+001    5 m    Player 5                          2701 USA           0 0000        2.0   36    30 w =    22 b =    32 w 0     8 b 0    17 w 1
+001    6 m    Player 6                          2696 USA           0 0000        2.5   29    31 b 0     9 w 0    45 b 1    26 w =    13 b 1
+001    7 m    Player 7                          2687 USA           0 0000        2.0   37    32 w 0    18 b 0     3 w =    37 b 1    36 w =
+001    8 m    Player 8                          2676 USA           0 0000        2.0   38    33 b =    23 w 0    38 b =     5 w 1    24 b 0
+001    9 m    Player 9                          2655 USA           0 0000        3.5    8    34 w 0     6 b 1    30 w =    50 b 1    41 b 1
+001   10 m    Player 10                         2624 USA           0 0000        3.0   11    35 b =    21 w 1    15 b 0    19 w =    23 b 1
+001   11 m    Player 11                         2600 USA           0 0000        3.5    7    36 w =    16 b =    20 w 1    28 b 1    42 w =
+001   12 m    Player 12                         2590 USA           0 0000        1.5   44    37 b =    19 w 0    21 b 0    14 w 1    26 b 0
+001   13 m    Player 13                         2589 USA           0 0000        1.5   43    38 w +    25 w 0    35 b =    16 b 0     6 w 0
+001   14 m    Player 14                         2555 USA           0 0000        1.0   49    39 b -     4 b =    46 w 0    12 b 0    18 w =
+001   15 m    Player 15                         2554 USA           0 0000        4.5    1    40 w 1    39 b =    10 w 1    48 b 1    34 w 1
+001   16 m    Player 16                         2534 USA           0 0000        2.5   23    41 b =    11 w =    24 b =    13 w 1    31 b 0
+001   17 m    Player 17                         2512 USA           0 0000        1.0   48    42 w -    50 b =     4 w 0    45 w =     5 b 0
+001   18 m    Player 18                         2500 USA           0 0000        1.5   42    43 b 0     7 w 1     1 b 0    38 w 0    14 b =
+001   19 m    Player 19                         2494 USA           0 0000        2.5   27    44 w =    12 b 1    34 w 0    10 b =    28 w =
+001   20 m    Player 20                         2488 USA           0 0000        3.0   18    45 b 1    29 w 0    11 b 0    27 w 1    49 b 1
+001   21 m    Player 21                         2476 USA           0 0000        3.0   19    46 w =    10 b 0    12 w 1    39 b 1    22 w =
+001   22 m    Player 22                         2466 USA           0 0000        3.0   16    47 b =     5 w =    49 b 1     1 w =    21 b =
+001   23 m    Player 23                         2458 USA           0 0000        2.0   32    48 w =     8 b 1    36 w =    25 b 0    10 w 0
+001   24 m    Player 24                         2430 USA           0 0000        3.0   21    49 b 0     3 w +    16 w =    46 b =     8 w 1
+001   25 m    Player 25                         2415 USA           0 0000        3.0   14    50 w 1    13 b 1     2 w 0    23 w 1    29 b 0
+001   26 m    Player 26                         2400 USA           0 0000        2.5   30     1 b 0    45 w 1    47 b 0     6 b =    12 w 1
+001   27 m    Player 27                         2392 USA           0 0000        1.0   46     2 w =    48 b 0    40 w =    20 b 0     3 w 0
+001   28 m    Player 28                         2382 USA           0 0000        2.5   24     3 b 1    49 w 1    43 b 0    11 w 0    19 b =
+001   29 m    Player 29                         2380 USA           0 0000        4.0    2     4 w 1    20 b 1    42 w =     2 b =    25 w 1
+001   30 m    Player 30                         2345 USA           0 0000        2.5   28     5 b =    47 w =     9 b =    41 w 0    44 b 1
+001   31 m    Player 31                         2311 USA           0 0000        3.5    6     6 w 1    34 b =    39 w 1    42 b 0    16 w 1
+001   32 m    Player 32                         2301 USA           0 0000        3.0   17     7 b 1    43 w 0     5 b 1    47 w =     1 b =
+001   33 m    Player 33                         2300 USA           0 0000        1.0   47     8 w =     2 b 0    50 w 0     3 b =    40 w 0
+001   34 m    Player 34                         2291 USA           0 0000        3.5    5     9 b 1    31 w =    19 b 1    43 w 1    15 b 0
+001   35 m    Player 35                         2251 USA           0 0000        3.0   15    10 w =    46 b 1    13 w =    36 b 1     4 w 0
+001   36 m    Player 36                         2244 USA           0 0000        2.5   25    11 b =    41 w 1    23 b =    35 w 0     7 b =
+001   37 m    Player 37                         2243 USA           0 0000        1.5   45    12 w =    44 b -    41 b 0     7 w 0    45 b 1
+001   38 m    Player 38                         2242 USA           0 0000        3.0   20    13 b -    40 b =     8 w =    18 b 1    46 w 1
+001   39 m    Player 39                         2240 USA           0 0000        2.0   31    14 w +    15 w =    31 b 0    21 w 0    50 b =
+001   40 m    Player 40                         2212 USA           0 0000        2.0   35    15 b 0    38 w =    27 b =    49 w 0    33 b 1
+001   41 m    Player 41                         2200 USA           0 0000        2.5   26    16 w =    36 b 0    37 w 1    30 b 1     9 w 0
+001   42 m    Player 42                         2189 USA           0 0000        4.0    3    17 b +     1 w 1    29 b =    31 w 1    11 b =
+001   43 m    Player 43                         2120 USA           0 0000        3.0   12    18 w 1    32 b 1    28 w 1    34 b 0     2 w 0
+001   44 m    Player 44                         2100 USA           0 0000        1.5   41    19 b =    37 w +    48 w 0     4 b 0    30 w 0
+001   45 m    Player 45                         2078 USA           0 0000        0.5   50    20 w 0    26 b 0     6 w 0    17 b =    37 w 0
+001   46 m    Player 46                         2043 USA           0 0000        2.0   33    21 b =    35 w 0    14 b 1    24 w =    38 b 0
+001   47 m    Player 47                         2032 USA           0 0000        2.5   22    22 w =    30 b =    26 w 1    32 b =    48 w 0
+001   48 m    Player 48                         2030 USA           0 0000        3.5   10    23 b =    27 w 1    44 b 1    15 w 0    47 b 1
+001   49 m    Player 49                         2022 USA           0 0000        2.0   34    24 w 1    28 b 0    22 w 0    40 b 1    20 w 0
+001   50 m    Player 50                         2012 USA           0 0000        2.0   39    25 b 0    17 w =    33 b 1     9 w 0    39 w =

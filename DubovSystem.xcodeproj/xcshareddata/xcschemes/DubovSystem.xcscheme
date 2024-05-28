@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Scheme
+   LastUpgradeVersion = "1540"
+   version = "1.7">
+   <BuildAction
+      parallelizeBuildables = "YES"
+      buildImplicitDependencies = "YES"
+      buildArchitectures = "Automatic">
+      <BuildActionEntries>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "4C4B9A092BF06DEB00CD068A"
+               BuildableName = "DubovSystem"
+               BlueprintName = "DubovSystem"
+               ReferencedContainer = "container:DubovSystem.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+      </BuildActionEntries>
+   </BuildAction>
+   <TestAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      shouldAutocreateTestPlan = "YES">
+   </TestAction>
+   <LaunchAction
+      buildConfiguration = "Debug"
+      selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
+      selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
+      launchStyle = "0"
+      useCustomWorkingDirectory = "NO"
+      ignoresPersistentStateOnLaunch = "NO"
+      debugDocumentVersioning = "YES"
+      debugServiceExtension = "internal"
+      allowLocationSimulation = "YES"
+      viewDebuggingEnabled = "No">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4C4B9A092BF06DEB00CD068A"
+            BuildableName = "DubovSystem"
+            BlueprintName = "DubovSystem"
+            ReferencedContainer = "container:DubovSystem.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/final test.trf&quot; --fpc_rounds 2"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--rtg &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/random.trf&quot; --p_count 30 --rtg_rounds 3"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-5.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-4.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-3.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-2.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-5.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-4.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-3.trf"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-2.trf"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2.trf&quot; --fpc_rounds 2"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test4.trf"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2.trf&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+      </CommandLineArguments>
+   </LaunchAction>
+   <ProfileAction
+      buildConfiguration = "Release"
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      savedToolIdentifier = ""
+      useCustomWorkingDirectory = "NO"
+      debugDocumentVersioning = "YES">
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "4C4B9A092BF06DEB00CD068A"
+            BuildableName = "DubovSystem"
+            BlueprintName = "DubovSystem"
+            ReferencedContainer = "container:DubovSystem.xcodeproj">
+         </BuildableReference>
+      </BuildableProductRunnable>
+   </ProfileAction>
+   <AnalyzeAction
+      buildConfiguration = "Debug">
+   </AnalyzeAction>
+   <ArchiveAction
+      buildConfiguration = "Release"
+      revealArchiveInOrganizer = "YES">
+   </ArchiveAction>
+</Scheme>
