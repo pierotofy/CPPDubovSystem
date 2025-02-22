@@ -22,14 +22,17 @@
 #ifndef Player_hpp
 #define Player_hpp
 
+#ifndef UNRATED
+#define UNRATED 0u
+#endif
+
 #include <stdio.h>
 #include <string>
 #include <vector>
+#include <set>
 
-/**
- * Match Color Info
- */
-namespace MatchColor {
+namespace CPPDubovSystem {
+
 /**
  * A simple color for a match
  */
@@ -40,9 +43,8 @@ enum Color {
  * Color preference for a match
  */
 enum ColorPreference {
-    NO_PREFERENCE, MILD, ABSOLUTE, ALTERNATION
+    NO_PREFERENCE = 1u, MILD, ALTERNATION, ABSOLUTE
 };
-}
 
 /**
  * Core player
@@ -66,13 +68,21 @@ private:
      */
     double points;
     /**
-     * Opponents played
+     * Opponents played to return
      */
-    std::vector<int> opp_played;
+    std::vector<int> opp_played_return;
+    /**
+     * Storage for opponents played
+     */
+    std::set<int> opp_played;
+    /**
+     * List of pairing restrictions
+     */
+    std::set<int> pairing_restrictions;
     /**
      * History of colors played with
      */
-    std::vector<MatchColor::Color> color_hist;
+    std::vector<Color> color_hist;
     /**
      * Ratings of each opponent
      */
@@ -101,6 +111,22 @@ private:
      * If the player had a bye/forfeit win
      */
     bool received_bye = false;
+    /**
+     * The saved due color
+     */
+    Color due_color_saved = Color::NO_COLOR;
+    /**
+     * Saved preference strength
+     */
+    ColorPreference strength = ColorPreference::NO_PREFERENCE;
+    /**
+     * If color preference was saved
+     */
+    bool has_saved_color = false;
+    /**
+     * If strength has been saved
+     */
+    bool has_saved_strength = false;
     
 public:
     
@@ -109,41 +135,47 @@ public:
      */
     double trf_pts = 0.0;
     
-    Player(std::string name, int rating, int id, double points);
+    /**
+     * Initializes the player with a given name, rating, id, and points
+     */
+    explicit Player(std::string name, int rating, int id, double points);
+    /**
+     * Default constructor for player
+     */
     Player();
     
     /**
      * A getter for player name
      */
-    std::string getName() {return name;}
+    std::string getName() const {return name;}
     /**
      * A getter for rating
      */
-    int getRating() {return rating;}
+    int getRating() const {return rating;}
     /**
      * A getter for ID
      */
-    int getID() {return id;}
+    int getID() const {return id;}
     /**
      * A getter for the number of colors played
      */
-    int getNumColors() {return color_count;}
+    int getNumColors() const {return color_count;}
     /**
      * Gets the number of opponents played
      */
-    int getOppCount() {return opp_count;}
+    int getOppCount() const {return opp_count;}
     /**
      * A simple getter for numUpfloated
      */
-    int getNumUpfloat() {return numUpfloated;}
+    int getNumUpfloat() const {return numUpfloated;}
     /**
      * A simple getter for points
      */
-    double getPoints() {return points;}
+    double getPoints() const {return points;}
     /**
      * Determines if the two players can play each other
      */
-    bool canPlayOpp(Player opp);
+    bool canPlayOpp(Player &opp);
     /**
      * Gets the average rating of opponents
      */
@@ -155,15 +187,15 @@ public:
     /**
      * Adds a color to the list of colors
      */
-    void addColor(MatchColor::Color c);
+    void addColor(Color c);
     /**
      * Gets the due color of the player
      */
-    MatchColor::Color getDueColor();
+    Color getDueColor();
     /**
      * Gets the strength of the due color
      */
-    MatchColor::ColorPreference getPreferenceStrength();
+    ColorPreference getPreferenceStrength();
     /**
      * Increments upfloat count
      */
@@ -171,11 +203,11 @@ public:
     /**
      * Determines if the player can upfloat
      */
-    bool canUpfloat(int cr);
+    bool canUpfloat(int cr) const;
     /**
      * A getter for opponents played
      */
-    std::vector<int> getOppPlayed() {return opp_played;}
+    std::vector<int> getOppPlayed() const {return opp_played_return;}
     /**
      * Adds the opponents rating to the list of ratings
      */
@@ -183,7 +215,7 @@ public:
     /**
      * Checks up a player upfloated previously
      */
-    bool upfloatedPreviously() {return upfloated_prev;}
+    bool upfloatedPreviously() const {return upfloated_prev;}
     /**
      * Sets the status of the player upfloat
      */
@@ -195,11 +227,44 @@ public:
     /**
      * Checks if the player has received a bye
      */
-    bool hasReceievedBye() {return received_bye;}
+    bool hasReceievedBye() const {return received_bye;}
     /**
      * Sets the bye status of player
      */
     void setByeStatus(bool s) {received_bye = s;}
+    /**
+     * Adds a pairing restriction to a given opponent id
+     */
+    void addPairingRestriction(int opp_id);
+    /**
+     * Applies rule 5.2.4 and determines if the player should receive the due color
+     */
+    bool shouldAlternate(const Player &opp);
+    /**
+     * Determines if the color histories of both players are equal
+     */
+    bool isColorHistEqual(const Player &opp) const;
+    /**
+     * Gets the first color played
+     */
+    Color getFirstColorPlayed() const;
+    /**
+     * Just for overloading == operator
+     */
+    bool operator ==(const Player &other);
+    /**
+     * Just for overloading != operator
+     */
+    bool operator !=(const Player &other);
+    /**
+     * Just for overloading the \< operator
+     */
+    bool operator <(const Player &other);
+    /**
+     * Just for overloading the > operator
+     */
+    bool operator >(const Player &other);
 };
+}
 
 #endif /* Player_hpp */

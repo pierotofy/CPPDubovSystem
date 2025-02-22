@@ -21,27 +21,48 @@
 
 #include "LinkedList.hpp"
 
-LinkedListNode::LinkedListNode() {
-    this->next = NULL;
+CPPDubovSystem::LinkedListNode::LinkedListNode(std::vector<Player> data): data(data), next(nullptr) {}
+
+CPPDubovSystem::LinkedList::LinkedList(): head(nullptr) {
+    
 }
 
-LinkedListNode::LinkedListNode(std::vector<Player> data) {
-    this->data = data;
+CPPDubovSystem::LinkedList::LinkedList(const LinkedList &linked_list) {
+    *this = linked_list;
 }
 
-LinkedList::LinkedList() {
-    this->head = NULL;
+CPPDubovSystem::LinkedList::~LinkedList() {
+    this->clear();
 }
 
-void LinkedList::insertNode(LinkedListNode n) {
-    LinkedListNode* d = new LinkedListNode(n.data);
-    if(this->head == NULL) {
+void CPPDubovSystem::LinkedList::insertNode(const std::vector<Player> &data) {
+    LinkedListNode* d = new LinkedListNode(data);
+    // this really is just some standard insert operations
+    if(this->head == nullptr) {
         this->head = d;
         return;
     }
     LinkedListNode* c = this->head;
-    while(c->next != NULL) {
+    while(c->next != nullptr) {
         c = c->next;
     }
     c->next = d;
+}
+
+void CPPDubovSystem::LinkedList::clear() {
+    while(this->head != nullptr) {
+        LinkedListNode *temp = this->head;
+        this->head = this->head->next;
+        delete temp;
+    }
+}
+
+void CPPDubovSystem::LinkedList::operator=(const LinkedList &linked_list) {
+    if(linked_list.head == nullptr) return;
+    
+    LinkedListNode *temp = linked_list.head;
+    while(temp != nullptr) {
+        this->insertNode(temp->data);
+        temp = temp->next;
+    }
 }

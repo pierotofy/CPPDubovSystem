@@ -21,6 +21,7 @@
 
 #include "trf.hpp"
 #include <fstream>
+#include <string>
 
 // https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf
 
@@ -36,7 +37,7 @@ void TRFUtil::clearSpaces(std::string *str_clear) {
     *str_clear = str_rep;
 }
 
-void TRFUtil::TRFData::parsePlayer(std::string line) {
+void TRFUtil::TRFData::parsePlayer(const std::string &line) {
     // we assume the 001 is not present
     
     // make sure at least 89 characters are present
@@ -119,7 +120,39 @@ void TRFUtil::TRFData::parsePlayer(std::string line) {
     this->player_section.push_back(player_data);
 }
 
-void TRFUtil::TRFData::parseLine(std::string line) {
+bool TRFUtil::TRFData::isAccelerationOn() const {
+    // acceleration is on if the ACC code is set to "true" or "1"
+    return this->acceleration_on;
+}
+
+void TRFUtil::TRFData::parseRestriction(const std::string &line) {
+    // it is assumed that 'FOR' is not present in line
+    // pairing restrictions should be divided up by a single space and the ID of both players
+    std::string p1 = "";
+    std::string p2 = "";
+    bool add_p1 = true;
+    // do some lexing to get both player IDs
+    for(int i = 0; i < line.size(); i++) {
+        std::string ch = line.substr(i, 1);
+        if(ch == " ") {
+            // make sure add_p1 is true
+            if(add_p1) {
+                add_p1 = false;
+                continue;
+            }
+            throw std::invalid_argument("Unexpected space found in 'FOR' keycode");
+        }
+        if(add_p1) {
+            p1 += ch;
+        } else {
+            p2 += ch;
+        }
+    }
+    // append to pairs
+    this->restricted_pairings.push_back(std::make_pair(std::stoi(p1), std::stoi(p2)));
+}
+
+void TRFUtil::TRFData::parseLine(const std::string &line) {
     // make sure we have at least 3 chars
     if(((int) line.size()) == 0) {
         return;
@@ -131,6 +164,7 @@ void TRFUtil::TRFData::parseLine(std::string line) {
     std::string line_id = line.substr(0, 3);
     std::map<std::string, std::string> keys;
     keys["012"] = "name";
+    keys["013"] = "team_data";
     keys["022"] = "city";
     keys["032"] = "fed";
     keys["042"] = "start";
@@ -146,6 +180,9 @@ void TRFUtil::TRFData::parseLine(std::string line) {
     keys["001"] = "players";
     keys["XXR"] = "extra";
     keys["TNR"] = "rounds";
+    keys["ACC"] = "baku_acceleration";
+    keys["BYE"] = "bye";
+    keys["FOR"] = "pairing_restriction";
     
     // make sure line id is valid
     if(keys.find(line_id) == keys.end()) {
@@ -159,13 +196,30 @@ void TRFUtil::TRFData::parseLine(std::string line) {
         return;
     } else if(line_id == "TNR") {
         this->rounds_tnr = std::stoi(line.substr(3));
+    } else if(line_id == "ACC") {
+        // check value
+        std::string s = line.substr(4);
+        if(s == "true" || s == "1") {
+            this->acceleration_on = true;
+        } else if(s == "false" || s == "0") {
+            this->acceleration_on = false;
+        } else {
+            throw std::invalid_argument("Unknown acceleration value passed in for TRF code 'ACC'. Expected 'true', '1', 'false', or '0' but got " + s + ". If there are any extra spaces after the value, make sure they are deleted");
+        }
+    } else if(line_id == "BYE") {
+        std::string s = line.substr(4);
+        int si = std::stoi(s);
+        this->byes.insert(si);
+    } else if(line_id == "FOR") {
+        std::string s = line.substr(4);
+        this->parseRestriction(s);
     }
     
     // record into table
     this->tournament_section[line_id] = line.substr(3);
 }
 
-TRFUtil::TRFFile::TRFFile(const std::string path) {
+TRFUtil::TRFFile::TRFFile(const std::string &path) {
     this->path = path;
 }
 
@@ -185,7 +239,7 @@ TRFUtil::TRFData TRFUtil::TRFFile::read() {
     return d;
 }
 
-void TRFUtil::TRFFile::write(std::string trf) {
+void TRFUtil::TRFFile::write(const std::string &trf) {
     std::ofstream writer(this->path);
     
     writer << trf;

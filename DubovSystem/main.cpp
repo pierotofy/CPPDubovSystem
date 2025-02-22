@@ -24,15 +24,14 @@
 #include "Tournament.hpp"
 #include "trf util/rtg.hpp"
 #include "fpc.hpp"
-
-#define CPPDUBOVSYSTEM_VERSION 1.0
+#include "csv util/csv.hpp"
 
 /**
  * Help info
  */
 void helpDisplay() {
     std::cout << "--------FIDE DUBOV SYSTEM PAIRING ENGINE--------" << std::endl;
-    std::cout << "--------------------Version 1.0-----------------" << std::endl;
+    std::cout << "--------------------Version 2.0-----------------" << std::endl;
     std::cout << "---------------Author: Michael Shapiro----------" << std::endl;
     std::cout << "-------------------Help Section-----------------" << std::endl;
     std::cout << "\n\n\n\n";
@@ -47,6 +46,7 @@ void helpDisplay() {
     std::cout << "|--rtg_rounds |(for rtg) total rounds       |" << std::endl;
     std::cout << "|--fpc        |Free Pairings Checker        |" << std::endl;
     std::cout << "|--fpc_rounds |(for fpc) Round to check     |" << std::endl;
+    std::cout << "|--output     |Output pairings to a file    |" << std::endl;
 }
 
 /**
@@ -54,38 +54,94 @@ void helpDisplay() {
  */
 void exampleUsage() {
     std::cout << "EXAMPLE USAGE" << std::endl;
-    std::cout << "./dubov_pairing_engine --pairings \"path/to/file.trf\"" << std::endl;
+    std::cout << "./CPPDubovSystem --pairings \"path/to/file.trf\"" << std::endl;
+    std::cout << "OR" << std::endl;
+    std::cout << "./CPPDubovSystem --pairings \"path/to/file.trf\" --output \"path/to/output.csv\"" << std::endl;
     std::cout << "FILE MUST BE IN TRF16 FORMAT!\n\n";
     std::cout << "EXAMPLE USAGE FOR RANDOM TOURNAMENT GENERATOR\n";
-    std::cout << "./dubov_pairing_engine --rtg path/to/trf/output.trf --p_count 10 --rtg_rounds 5\n\n";
+    std::cout << "./CPPDubovSystem --rtg path/to/trf/output.trf --p_count 10 --rtg_rounds 5\n\n";
     std::cout << "EXAMPLE USAGE FOR FREE PAIRINGS CHECKER\n";
-    std::cout << "./dubov_pairing_engine --fpc path/to/trf/output.trf --fpc_rounds 2\n";
+    std::cout << "./CPPDubovSystem --fpc path/to/trf/output.trf --fpc_rounds 2" << std::endl;
+}
+
+/**
+ * Gets the largest player name (in length) for white and black and returns the length for both
+ */
+std::pair<int, int> getLargestPlayerName(const std::vector<CPPDubovSystem::Match> &pairings) {
+    int white_len = 0;
+    int black_len = 0;
+    
+    // run through pairings and take the larger of the two lengths
+    for(auto i : pairings) {
+        white_len = std::max(white_len, (int) i.white.getName().size());
+        if(i.is_bye) {
+            black_len = std::max(black_len, 3);
+        } else {
+            black_len = std::max(black_len, (int) i.black.getName().size());
+        }
+    }
+    
+    return std::make_pair(white_len, black_len);
 }
 
 /**
  * Outputs the pairings generated
  */
-void outputPairings(std::vector<Match> pairings, int for_round) {
+void outputPairings(const std::vector<CPPDubovSystem::Match> &pairings, int for_round) {
     std::cout << "---------PAIRINGS FOR ROUND " << for_round << "---------" << std::endl;
-    std::cout << "|White|Black|" << std::endl;
-    std::cout << "|-----|-----|" << std::endl;
+    // take the larger of the lengths for pairings so our output looks more reliable
+    std::pair<int, int> name_lengths = getLargestPlayerName(pairings);
+    std::string first_line = "|White";
+    int white_loop = std::max(5, name_lengths.first);
+    for(int i = 5; i < white_loop; i++)
+        first_line += " ";
+    first_line += "|Black";
+    int black_loop = std::max(5, name_lengths.second);
+    for(int i = 5; i < black_loop; i++)
+        first_line += " ";
+    first_line += "|";
+    std::cout << first_line << std::endl;
+    // also configure second line
+    std::string second_line = "|";
+    for(int i = 1; i <= name_lengths.first; i++)
+        second_line += "-";
+    second_line += "|";
+    for(int i = 1; i <= name_lengths.second; i++)
+        second_line += "-";
+    second_line += "|";
+    std::cout << second_line << std::endl;
     for(int i = 0; i < pairings.size(); i++) {
-        std::cout << "|" << pairings[i].white.getName() << "|";
+        std::cout << "|" << pairings[i].white.getName() << std::string(name_lengths.first - ((int) pairings[i].white.getName().size()), ' ') << "|";
         if(pairings[i].is_bye) {
-            std::cout << "BYE|\n";
+            std::cout << "BYE" << std::string(name_lengths.second - 3, ' ') << "|" << std::endl;
             continue;
         }
-        std::cout << pairings[i].black.getName() << "|\n";
+        std::cout << pairings[i].black.getName() << std::string(name_lengths.second - ((int) pairings[i].black.getName().size()), ' ') << "|" << std::endl;
     }
+}
+
+/**
+ * Outputs pairings to a file
+ */
+void outputPairingsToFile(const std::vector<CPPDubovSystem::Match> &pairings, const std::string &path) {
+    // make csv data table
+    PairingTable pt;
+    
+    // add rows
+    for(int i = 0; i < pairings.size(); i++) {
+        if(pairings[i].is_bye) {
+            pt.addRow(std::to_string(pairings[i].white.getID()), "-1");
+            continue;
+        }
+        pt.addRow(std::to_string(pairings[i].white.getID()), std::to_string(pairings[i].black.getID()));
+    }
+    
+    // output to file
+    pt.outputToFile(path);
 }
 
 int main(int argc, const char * argv[]) {
     if(argc == 1) {
-        std::string v = argv[1];
-        if(v == "--version") {
-            std::cout << "DubovSystem -- Version 1.0\n";
-            return 0;
-        }
         helpDisplay();
         return 0;
     } /*else if(argc > 3) {
@@ -101,10 +157,13 @@ int main(int argc, const char * argv[]) {
             exampleUsage();
             return 0;
         } else if(passed == "--pairings") {
-            std::cout << "Missing TRF file path" << std::endl;
+            std::cerr << "Missing TRF file path" << std::endl;
+            return -1;
+        } else if(passed == "--version") {
+            std::cout << "CPPDubovSystem -- Version 2.0" << std::endl;
             return 0;
         }
-        std::cout << "Unexpected command passed in. Execute --help command or --sample for sample usage" << std::endl;
+        std::cerr << "Unexpected command passed in. Execute --help command or --sample for sample usage" << std::endl;
         return 0;
     }
     // argc = 3
@@ -113,7 +172,10 @@ int main(int argc, const char * argv[]) {
     if(pair_command == "--rtg") {
         // expect p-count and rounds
         if(argc < 7) {
-            std::cout << "Too few arguments passed for random tournament generator. Run --sample for example usage\n";
+            std::cerr << "Too few arguments passed for random tournament generator. Run --sample for example usage" << std::endl;
+            return 0;
+        } else if(argc > 7) {
+            std::cerr << "Too many arguments passed for random tournament generator. Run --sample for example usage" << std::endl;
             return 0;
         }
         std::string p1 = argv[3];
@@ -121,34 +183,34 @@ int main(int argc, const char * argv[]) {
         std::string p2 = argv[5];
         std::string p3 = argv[6];
         if(p1 != "--p_count") {
-            std::cout << "Expected --p_count in call\n";
+            std::cerr << "Expected --p_count in call" << std::endl;
             return 0;
         }
         if(p2 != "--rtg_rounds") {
-            std::cout << "Expected --rtg_rounds in call\n";
+            std::cerr << "Expected --rtg_rounds in call" << std::endl;
             return 0;
         }
         int pc = std::stoi(p11);
         int r = std::stoi(p3);
-        std::string trf_output = Tournament::simulateTournament(pc, r);
+        std::string trf_output = CPPDubovSystem::Tournament::simulateTournament(pc, r);
         TRFUtil::TRFFile file_write(path);
         file_write.write(trf_output);
         return 0;
     } else if(pair_command == "--fpc") {
         // expect fpc_rounds
         if(argc != 5) {
-            std::cout << "Invalid arguments passed for free pairings checker. Run --sample for example usage\n";
+            std::cerr << "Invalid arguments passed for free pairings checker. Run --sample for example usage" << std::endl;
             return 0;
         }
         std::string p1 = argv[3];
         std::string p2 = argv[4];
         if(p1 != "--fpc_rounds") {
-            std::cout << "Missing --fpc_rounds in call";
+            std::cerr << "Missing --fpc_rounds in call" << std::endl;
             return 0;
         }
         int pc = std::stoi(p2);
         fpc::PairingsChecker pc_main(path, pc);
-        std::cout << "Initiating Pairings Checker. Note that when reading output here, pay attention primarily to the expected pairings. This tool can only say errors in given pairings. It cannot give any other errors than basic pairing violations such as violation to C1.\n\n";
+        std::cout << "Initiating Pairings Checker.\n\n";
         std::cout << pc_main.outputReport();
         return 0;
     }
@@ -160,18 +222,34 @@ int main(int argc, const char * argv[]) {
     TRFUtil::TRFData file_read = file.read();
     
     // make sure rounds exist
-    if(file_read.getTournamentSection().find("TNR") == file_read.getTournamentSection().end()) {
-        std::cout << "Missing tournament number of rounds in TRF file" << std::endl;
+    if(!file_read.tnrCodeExists()) {
+        std::cerr << "Missing tournament number of rounds in TRF file" << std::endl;
         return 2;
     }
     
     int rounds_done = 0;
     
     // get tournament
-    Tournament trfTournament = Tournament::makeTournament(file_read, &rounds_done);
+    CPPDubovSystem::Tournament trfTournament = CPPDubovSystem::Tournament::makeTournament(file_read, &rounds_done);
     
-    // do next round pairings
-    std::vector<Match> m = trfTournament.generatePairings(rounds_done + 1);
+    // now determine if the tournament is already complete
+    // the tournament is complete when all the rounds have been played
+    if(rounds_done >= file_read.getRoundsTnr()) {
+        std::cerr << "The tournament is already complete!" << std::endl;
+        return 3;
+    }
+    
+    std::vector<CPPDubovSystem::Match> m;
+    
+    // check if acceleration was invoked
+    if(file_read.isAccelerationOn()) {
+        // do next round pairings with acceleration
+        m = trfTournament.generatePairings(rounds_done + 1, true);
+    } else {
+        // do next round pairings without acceleration
+        m = trfTournament.generatePairings(rounds_done + 1);
+    }
+    
     
     // check for errors as needed
     if(trfTournament.pairingErrorOccured()) {
@@ -181,18 +259,18 @@ int main(int argc, const char * argv[]) {
     
     outputPairings(m, rounds_done + 1);
     
-    //MARK: TEST INFO
-    /// r2 (o) -> p4-p1,p2-p3,p6-p5,p10-p7,p8-p9
-    /// r3 (o) -> p1-p2,p5-p4,p7-p8,p3-p10,p9-p6
-    /// r4 (o) -> p1-p3,p2-p5,p4-p7,p6-p8,p10-p9
-    /// r5 (o) -> p5-p1,p2-p4,p7-p6,p3-p9,p8-p10
-    //MARK: TEST INFO END
-    //MARK: TEST INFO2
-    /// r2 (o) -> p11-p1,p2-p5,p4-p3,p6-p9,p8-p7,p10-B
-    /// r3 (o) -> p3-p2,p1-p4,p5-p6,p7-p11,p10-p8,p9-B
-    /// r4 (o) -> p2-p1,p3-p5,p6-p7,p4-p11,p9-p10,p8-B
-    /// r5 (o) -> p1-p3,p8-p2,p6-p4,p5-p9,p11-p10,p7-B
-    //MARK: TEST INFO2 END
+    // check if output to file is present
+    if(argc == 5) {
+        std::string ot = argv[3];
+        if(ot != "--output") {
+            std::cerr << "Expected --output for pairings file output path. Pairings were not outputted" << std::endl;
+            return -1;
+        }
+        // expect path
+        std::string output_path = argv[4];
+        // output to path
+        outputPairingsToFile(m, output_path);
+    }
     
     return 0;
 }

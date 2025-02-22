@@ -26,24 +26,66 @@
 #include <vector>
 #include "Player.hpp"
 
-#endif /* LinkedList_hpp */
+// this really is just a simple linked list implementation to store players
 
-class LinkedListNode {
-    
-public:
+namespace CPPDubovSystem {
+/**
+ * A single linked list node
+ */
+struct LinkedListNode {
+    /**
+     * The data it holds, which is a vector of players
+     */
     std::vector<Player> data;
-    LinkedListNode* next;
-    
-    LinkedListNode();
+    /**
+     * The next node it points to
+     */
+    LinkedListNode *next;
+    /**
+     * Constructor for LinkedListNode
+     */
     LinkedListNode(std::vector<Player> data);
-    
 };
 
+/**
+ * The actual linked list
+ */
 class LinkedList {
 private:
+    /**
+     * The head (root) of the data
+     */
     LinkedListNode* head;
 public:
+    /**
+     * Default constructor
+     */
     LinkedList();
-    void insertNode(LinkedListNode);
+    /**
+     * Just a deep copy constructor
+     */
+    LinkedList(const LinkedList &linked_list);
+    /**
+     * A destructor
+     */
+    ~LinkedList();
+    /**
+     * Inserts a node into the list
+     */
+    void insertNode(const std::vector<Player> &group);
+    /**
+     * Gets the head of the list
+     */
     LinkedListNode* getHead() {return head;}
+    /**
+     * Completely clears the linkedlist
+     */
+    void clear();
+    /**
+     * Just for overloading the '=' operator
+     */
+    void operator =(const LinkedList &linked_list);
 };
+}
+
+#endif /* LinkedList_hpp */

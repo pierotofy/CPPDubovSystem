@@ -26,6 +26,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <set>
 
 /**
  * For reading & writing TRF data
@@ -40,49 +41,107 @@ void clearSpaces(std::string *str_clear);
  */
 class TRFData {
 private:
+    /**
+     * Data captured in tournament section
+     */
     std::map<std::string, std::string> tournament_section;
+    /**
+     * Data captured in player section
+     */
     std::vector<std::map<std::string, std::string>> player_section;
+    /**
+     * Players who requested byes
+     */
+    std::set<int> byes;
+    /**
+     * List of forbidden pairings
+     */
+    std::vector<std::pair<int, int>> restricted_pairings;
+    /**
+     * Number of rounds captured
+     */
     int rounds_captured;
-    int rounds_tnr;
+    /**
+     * Total number of tournament rounds (TNR code)
+     */
+    int rounds_tnr = -1; // we default it to -1 to detect the tnr code more easily
+    /**
+     * If acceleration was invoked
+     */
+    bool acceleration_on = false;
     /**
      * Parses player data
      */
-    void parsePlayer(std::string line);
+    void parsePlayer(const std::string &line);
+    /**
+     * Parses the line for pairing restriction
+     */
+    void parseRestriction(const std::string &line);
 public:
+    /**
+     * Default constructor
+     */
+    TRFData() = default;
     /**
      * Gets collected data from tournament section
      */
-    std::map<std::string, std::string> getTournamentSection() {return tournament_section;}
+    std::map<std::string, std::string> getTournamentSection() const {return tournament_section;}
     /**
      * Gets player section info
      */
-    std::vector<std::map<std::string, std::string>> getPlayerSection() {return player_section;}
+    std::vector<std::map<std::string, std::string>> getPlayerSection() const {return player_section;}
+    /**
+     * Gets all players who requested byes for a round
+     */
+    std::set<int> getBYEs() const {return byes;}
     /**
      * Gets the number of rounds read
      */
-    int getRounds() {return rounds_captured;}
+    int getRounds() const {return rounds_captured;}
     /**
      * Gets the rounds from the captured TNR code
      */
-    int getRoundsTnr() {return rounds_tnr;}
+    int getRoundsTnr() const {return rounds_tnr;}
+    /**
+     * Determines if the tnr code exists in the file. When it is not present, false is returned. This should of course only be executed after the file has actually been read
+     */
+    bool tnrCodeExists() const {return this->rounds_tnr > 0;}
     /**
      * Parses a trf line
      */
-    void parseLine(std::string line);
+    void parseLine(const std::string &line);
+    /**
+     * Determines if acceleration was invoked
+     */
+    bool isAccelerationOn() const;
+    /**
+     * Gets pairing restrictions imposed
+     */
+    std::vector<std::pair<int, int>> getPairingRestrictions() const {return restricted_pairings;}
 };
+
+/**
+ * A single TRF file
+ */
 class TRFFile {
 private:
+    /**
+     * The path of the file
+     */
     std::string path;
 public:
-    TRFFile(std::string const path);
+    /**
+     * A simple constructor initalizing the path
+     */
+    TRFFile(const std::string &path);
     /**
      * A simple getter for path
      */
-    std::string getPath() {return path;}
+    std::string getPath() const {return path;}
     /**
      * Writes the TRF data to the path
      */
-    void write(std::string trf);
+    void write(const std::string &trf);
     /**
      * Reads the TRF data
      */

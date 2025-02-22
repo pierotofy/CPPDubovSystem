@@ -1,6 +1,6 @@
 # CPPDubovSystem
 
-A way to generate pairings via the FIDE Swiss Dubov system.
+A simple pairing engine that generates pairings via the FIDE Swiss Dubov system.
 
 ## Table of Contents
 
@@ -9,70 +9,81 @@ A way to generate pairings via the FIDE Swiss Dubov system.
 - Use by Terminal
 - Use by API
 - Extra Notes
+- Acknowledgements
 - License
 
 ## About CPPDubovSystem
 
-CPPDubovSystem (**current version 1.0**) is a framework for generating pairings using the FIDE Swiss Dubov algorithm. It is coded entirely in C++.
+CPPDubovSystem (**current version 2.0**) is a framework for generating pairings using the FIDE Swiss Dubov algorithm. It is coded entirely in C++.
 
 This framework follows all the rules written [here](https://handbook.fide.com/chapter/C040401202507). I reccomend for you to [see also](http://www.rrweb.org/javafo/C04.pdf). Please note that this has **NOT YET BEEN APPROVED** by FIDE, however it will be sent to FIDE at one point for approval. Follow this repository for updates!
 
 ## Installation
 
-The easiest way to install CPPDubovSystem is to download this github repository, and compile it. I have tested this all in Xcode, so Xcode simply compiled it for me. If you are on another platform such as Linux, you may have to do some research on how to compile this (like I said, Xcode did the compiling for me here). You might want to consider looking into something like g++.
+The easiest way to install CPPDubovSystem is to download this github repository, and compile it. Make sure you have g++ installed (or if you are on Mac, the clang++ command that comes standard with Xcode), and run the following in a terminal below. You are essentially going to run the build.sh file that is in the same directory as this README (so make sure to cd into this project in your terminal).
 
 ```console
-CPPDubovSystemUser@LinuxVirtualMachine:~$ g++ main.cpp
+user@user:~$ chmod +x build.sh; ./build.sh
 ```
 
-If you are on windows, you may want to look into gcc
-
-```console
-CPPDubovSystemUser@WindowsVirtualMachine:~$ gcc main.cpp -o CPPDubovSystem.exe
-```
-
-Please note: this has not been tested on any other platform. This was only tested on MacOS. So if you are a Mac user, I strongly encourage you let Xcode compile the source code for you. If you really want to compile this through terminal on Mac, make sure you have Xcode installed, as the g++ command will be installed with it. Then try executing the following
-
-```console
-CPPDubovSystemUser@MacVirtualMachine:~$ g++ -o output main.cpp
-```
-
-Generally speaking, this should work on any system. It doesn't require any external framework or library to work. I have tested this framework on my M1 Mac with Xcode 15.4.
+Please note: this framework was only tested on MacOS, and no other platform. Do know however that generally speaking, this should work on any system. It doesn't require any external framework or library to work (or use anything native to MacOS in specific). I have tested this framework on my M1 Mac with Xcode 16.2.
 
 ## Use by Terminal
 
-The best way to get the pairings is by executing the data via terminal. For this example, assume "./main" is the compiled source code.
+The best way to get the pairings is by executing the data via terminal.
 
 ### Standard Pairings
 
 To get pairings for a round, execute the following:
 
 ```console
-user@user:~$ ./main --pairings "path/to/tournament_data.trf"
+user@user:~$ ./CPPDubovSystem --pairings "path/to/tournament_data.trf"
 ```
 
-The framework accepts a file coded in [TRF16](https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf) as per FIDE requirements. The program at the moment cannot output the pairings to a file, just the terminal. I am hoping that by version 1.1, I can output it all into a file.
+The framework accepts a file coded in [TRF16](https://www.fide.com/FIDE/handbook/C04Annex2_TRF16.pdf) as per FIDE requirements.
 
-**Important Note**: you must read this as it is extremely important for generating pairings. The pairing engine **needs to know how many rounds your tournament has**. Therefore, in your TRF file, you must include the following code **TNR _round\_count_** in order for the pairing engine to capture the number of rounds in the tournament. See one of the example files in the "tests" folder.
+**Important Note**: the pairing engine **needs to know how many rounds your tournament has**. Therefore, in your TRF file, you must include the following code **TNR _round\_count_** in order for the pairing engine to capture the number of rounds in the tournament. See one of the example files in the "tests" folder.
+
+If you would like to invoke [Baku acceleration](https://handbook.fide.com/chapter/C0405202507), make sure to set the "ACC" code in the TRF file, and set the value to "true" or "1" (see an example in "DubovSystem/tests/baku_test.trf"). If you do not intend to use acceleration, you don't have to include the "ACC" code.
+
+If you would like to signal the pairing engine that a player requests a bye (or simply not to pair it for the round) just add the following code in the TRF file: **BYE [_ID_]**. Obviously you would replace the "[ID]" part with the ID (or the pairing number/starting rank) of the player you are attempting not to pair.
+
+To make forbidden pairs (or pairing restrictions), simply add the TRF code "FOR" followed by the two players you are trying to make the pairing restriction. For instance, assume Player 1 (with ID 1) has a pairing restriction to Player 2 (with ID 2). You would write down in the TRF file "FOR 1 2" to create a pairing restriction for both of those players.
+
+Note that "FOR" and "BYE" doesn't support a list of players. So if you have multiple players with byes for instance, you have to write down the "BYE" and/or "FOR" code multiple times. See an example of using "BYE" and "FOR" in "DubovSystem/tests/parsing_test.trf."
+
+### Outputing Standard Pairings to File
+
+This framework can also output the pairings generated to a file. Run the command below to achieve this.
+
+```console
+user@user:~$ ./CPPDubovSystem --pairings "path/to/tournament_data.trf" --output "path/to/output.csv"
+```
+
+The data outputted by the framework is in CSV format. There are only two columns in the file, "White" and "Black." For each column, the players ID (or starting rank passed in) is outputted respectively. Any players who recieved a PAB (pairing allocated BYE) will have their opponent ID marked as -1.
+
+Note that any players which you signaled not to pair, will not be outputted in the file. The pairing engine is designed to only output players in the CSV file which are active for the round.
 
 ### Random Tournament Generator
 
 You can also use this engine to generate a random tournament. FIDE defines these random tournament generators as simply an engine that creates a tournament, and simulates it with random game results. Run the command below as follows to achieve this:
 
 ```console
-user@user:~$ ./main --rtg "path/to/trf.trf" --p_count 10 --rtg_rounds 5
+user@user:~$ ./CPPDubovSystem --rtg "path/to/trf.trf" --p_count 10 --rtg_rounds 5
 ```
 
 The sample command above creates a random tournament with 10 players and 5 rounds. It will output this all into a trf file (TRF16 encoded). If a round cannot be completed for whatever reason (which is highly unlikely to happen), the program will output all the rounds it was able to generate until the round it could not generate pairings for.
 
+_Please note that sometimes, a round or two could have pairings done incorrectly (when executing the random tournament generator). Make sure to always check those rounds with the free pairings checker to make sure that the pairings are correct. This is simply a bug I noticed that rarely comes up in the RTG, and I am still working out a solution to fix it._
+
 ### Free Pairings Checker
 
-This framework can also check your pairings to see how they compare to the internal ones generated. Please note however, this pairings checker is only designed to check which pairings given violate basic rules (such as two players cannot play each other again if they met before). Since it outputs both pairings (the internal generated one and the one given for checking), you can make your comparisons and check which ones don't align with that the engine got.
+This framework can also check your pairings to see how they compare to the internal ones generated. It will output both the internal generated one and the one to compare, and show any distinctions between the two.
 
 Execute the following command to use the pairings checker
 
 ```console
-user@user:~$ ./main --fpc "path/to/trf.trf" --fpc_rounds 3
+user@user:~$ ./CPPDubovSystem --fpc "path/to/trf.trf" --fpc_rounds 3
 ```
 
 Once again, we pass in a TRF16 encoded file, and we pass in what round number to check. In our example, we are asking the engine to check round 3.
@@ -81,15 +92,15 @@ Once again, we pass in a TRF16 encoded file, and we pass in what round number to
 
 Here is a breif list of other commands you can execute:
 
-|Command  |Description   |
-|---------|--------------|
-|--help   |Standard help |
-|--version|Output version|
-|--sample |Example usage |
+|Command  |Description      |
+|---------|-----------------|
+|--help   |Standard help    |
+|--version|Output version   |
+|--sample |Example usage    |
 
 ## Use by API
 
-If you do not want to use this by terminal, you can also try executing with C++ code. Since you cannot get pairings written to a file through the terminal method, using the API method is the best alternate to get direct access to all the pairings.
+If you do not want to use this by terminal, you can also try executing with C++ code.
 
 ### Standard Pairings
 
@@ -105,13 +116,13 @@ If you do not want to use this by terminal, you can also try executing with C++ 
 
 int main() {
     // first make our tournament
-    Tournament our_tournament(5); // we pass in 5 for 5 rounds
+    CPPDubovSystem::Tournament our_tournament(5); // we pass in 5 for 5 rounds
     
     // now we should add some players
-    Player player1("Player 1", 1200, 1, 0.0); // we make a player object with a name, rating, ID, and points
-    Player player2("Player 2", 1100, 2, 0.0);
-    Player player3("Player 3", 1000, 3, 0.0);
-    Player player4("Player 4", 900, 4, 0.0);
+    CPPDubovSystem::Player player1("Player 1", 1200, 1, 0.0); // we make a player object with a name, rating, ID, and points
+    CPPDubovSystem::Player player2("Player 2", 1100, 2, 0.0);
+    CPPDubovSystem::Player player3("Player 3", 1000, 3, 0.0);
+    CPPDubovSystem::Player player4("Player 4", 900, 4, 0.0);
     
     our_tournament.addPlayer(player1); // this is how to add the player to the tournament
     our_tournament.addPlayer(player2);
@@ -119,10 +130,10 @@ int main() {
     our_tournament.addPlayer(player4);
     
     // now to get the pairings
-    std::vector<Match> the_pairings = our_tournament.generatePairings(1); // we pass in the round to generate pairings for
+    std::vector<CPPDubovSystem::Match> the_pairings = our_tournament.generatePairings(1); // we pass in the round to generate pairings for
     
     for(int i = 0; i < the_pairings.size(); i++) {
-        Match the_match = the_pairings[i];
+        CPPDubovSystem::Match the_match = the_pairings[i];
         std::cout << "White: " << the_match.white.getName() << std::endl;
         if(the_match.is_bye) {
             std::cout << "BYE\n";
@@ -146,9 +157,9 @@ In some cases you may need to add more info to player data, such as opponents pl
 #include "Player.hpp"
 
 int main() {
-    Player example("EXAMPLE", 2000, 1, 1.0);
-    Player example2("EXAMPLE2", 1000, 2, 0.0);
-    Player example3("EXAMPLE3", 900, 3, 1.0);
+    CPPDubovSystem::Player example("EXAMPLE", 2000, 1, 1.0);
+    CPPDubovSystem::Player example2("EXAMPLE2", 1000, 2, 0.0);
+    CPPDubovSystem::Player example3("EXAMPLE3", 900, 3, 1.0);
     
     // add opponent history
     example.addOpp(2); // we pass in the opponent id here, which in our example is 2. We basically just told the program that player EXAMPLE played whoever has the id of 2
@@ -157,8 +168,8 @@ int main() {
     example2.addOppRating(2000);
     
     // add color history
-    example.addColor(MatchColor::Color::WHITE); // we just said that EXAMPLE already played as white
-    example2.addColor(MatchColor::Color::BLACK); // same thing for EXAMPLE2
+    example.addColor(CPPDubovSystem::Color::WHITE); // we just said that EXAMPLE already played as white
+    example2.addColor(CPPDubovSystem::Color::BLACK); // same thing for EXAMPLE2
     
     // adding bye info
     example3.setByeStatus(true); // we just marked EXAMPLE3 as the player who already got a bye
@@ -168,6 +179,9 @@ int main() {
     // you can play with upfloat history as well. In fact if a player upfloated, you should work with this
     example2.incrementUpfloat(); // increments by 1, the number of times the player upfloated in the whole tournament
     example2.setUpfloatPrevStatus(true); // if the player only upfloated in the previous round, this is required to set to true
+    
+    // to assign pairing restrictions, use addPairingRestriction
+    example3.addPairingRestriction(1); // this forbids EXAMPLE3 from ever getting paired up with EXAMPLE
 
     return 0;
 }
@@ -175,23 +189,35 @@ int main() {
 
 A word on **incrementUpfloat** and **setUpfloatPrevStatus**. If you are not familiar with the term "upfloater", this simply means someone who played another person who has a higher score then them. For instance, if Bob (who has 1.0 points) plays Joe (who has 2.0 points), Bob is the upfloater. Float history is extremely important here. For each round the player upfloats, you must signal it to the framework using **incrementUpfloat**. If the player upfloated just the round before the round you are attempting to pair, you must mark **setUpfloatPrevStatus** to true. Otherwise, mark it as false.
 
+If a player is requesting a bye, or you do not wish to pair a player, simply do not include that player in the pairing selection.
+
+### Applying Baku Acceleration
+
+If you want to use baku acceleration, just add one more argument to generate pairings, and set it to "true." See the example below.
+
+```cpp
+#include <iostream>
+#include "Tournament.hpp"
+
+int main() {
+    CPPDubovSystem::Tournament someTournament(5);
+    // assume for this example players were already added to someTournament
+    
+    std::vector<CPPDubovSystem::Match> games = someTournament.generatePairings(2, true); // adding 'true' signals to the pairing engine that it should use baku acceleration
+    
+    return 0;
+}
+```
+
 ## Extra Notes
 
-Please read this section if you are planning on using this framework. It is extremely important to note that as the FIDE rules say, you are required to **make sure all players are rated**. It actually says it in rule 1.1.1 (see rule book). While at least for version 1.0 this pairing engine won't give you any warnings, you must make sure all players have some kind of rating (even provisional is OK).
+It is extremely important to note that as the FIDE rules say, you are required to **make sure all players are rated**. It actually says it in rule 1.1.1 (see rule book). If the pairing engine detects that a player is unrated, it will put a warning in the console and then generate pairings normally.
 
-It is also noted in the FIDE rule book that the number of rounds the tournament has **must** be set. So remember that when using this framework through a terminal, make sure that the **TNR** code is in the TRF file. Don't worry about passing in what round to pair. CPPDubovSystem is designed to auto-detect what round to pair by counting the number of games recorded (for a single player) in the TRF file.
+It is also noted in the FIDE rule book that the number of rounds the tournament has **must** be set. So remember that when using this framework through a terminal, make sure that the **TNR** code is in the TRF file.
 
 Once again, this pairing engine has not yet been approved by FIDE. But I will send it to them for approval. I will update this README file once they have approved it.
 
-Also note that it is impossible for this framework to violate the 3 absolute criteria. This program does several checks, and ensures that all pairings do not violate the 3 most important criteria noted in the rule book. In other words, don't worry about an invalid pairing.
-
-This framework **does not** do acceleration of any kind here. If you want to have Baku acceleration or another Swiss acceleration, I strongly encourage that you either attempt to code that on your own or use something like [JaVaFo](http://www.rrweb.org/javafo/JaVaFo.htm) by Roberto Ricca.
-
-The framework cannot handle pairing restrictions at the moment as well. When I say pairing restrictions, I mean like if you tell it to stop players with the same team/club from getting paired up with each other. I am hoping that in some future version (maybe 1.1, most likely 1.2) this feature will be made available. Also, try not to "force" pairing restrictions by using the API method. In particular, try to avoid making a pairing restriction by marking two players as played before (i.e. using **addOpp** method). While this **is OK** when the number of players are even, it could create a few problems when the number of players are odd.
-
-This framework also has the limitation in the sense that it doesn't assign board numbers for pairings. This framework is simply a engine for just purely generating pairings. Hopefully in some future version, I will add this feature.
-
-The last limitation this framework has (in specific through the terminal method) is handling requested byes. For now, there is no easy way to signal that a player requested a bye for a pairing round in the TRF file. So if you do not want to pair somebody for a round, simply use the API method by not adding the player to the list of players in the pairing selection.
+For the first round, this pairing engine will automatically assign the color white to the top player. There is no way you can override this. If you want to assign black to the top player, after the pairings are generated, you will have to fix this yourself.
 
 Here is a list of error codes the framework can give you:
 
@@ -199,8 +225,15 @@ Here is a list of error codes the framework can give you:
 - -1 Pairings cannot be completed for some reason (this can be for any reason, like everyone already played everyone in the tournament)
 - 1 Malformed TRF file (the data cannot be read). You will actually find that an error will be thrown for this one
 - 2 Missing tournament number of rounds
+- 3 Tournament complete (a new round is attempted to be paired, but all the rounds are complete)
 
 Also note that upon pairing error (error code = -1) CPPDubovSystem will not attempt to repair anybody. It will simply throw you an error
+
+## Acknowledgements
+
+As of CPPDubovSystem version 2.0, code was incorporated from the Minimum-Cost-Perfect-Matching repository [(https://github.com/dilsonpereira/Minimum-Cost-Perfect-Matching)](https://github.com/dilsonpereira/Minimum-Cost-Perfect-Matching), which was authored by dilsonpereira, and licensed under the MIT license. See "DubovSystem/graph util" in this project for the complete code of the repository mentioned, and a copy of the license.
+
+I would also like to thank Roberto Ricca for helping me test this framework and validate the correctness of the pairings. This is a huge leap to hopefully getting it approved by FIDE and be used by other pairing programs! I thank you a lot for your help!
 
 ## License
 

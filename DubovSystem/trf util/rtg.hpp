@@ -60,13 +60,19 @@ private:
      */
     int raw_final_rank = 0;
 public:
+    /**
+     * Initializes the raw player with a given name, rating, and rank (pairing number)
+     */
     RawPlayer(std::string raw_name, int raw_rating, int rank);
+    /**
+     * Just empty default constructor
+     */
     RawPlayer();
     
     /**
      * Gets the player representation of the trf data
      */
-    std::string getTRFLiteral();
+    std::string getTRFLiteral() const;
     
     /**
      * Adds a game played
@@ -84,7 +90,7 @@ public:
 /**
  * Generates a random tournament and returns the trf string interpretation of it
  */
-std::string trfString(int player_count, int rounds, std::vector<RandomTournamentGenerator::RawPlayer> players);
+std::string trfString(int player_count, int rounds, const std::vector<RandomTournamentGenerator::RawPlayer> &players);
 }
 
 #endif /* rtg_hpp */

@@ -44,13 +44,13 @@ void RandomTournamentGenerator::RawPlayer::appendRawGame(std::string raw_game) {
     this->raw_games.push_back(raw_game);
 }
 
-std::string RandomTournamentGenerator::RawPlayer::getTRFLiteral() {
-    std::string trf_literal = "001";
+std::string RandomTournamentGenerator::RawPlayer::getTRFLiteral() const {
+    std::string trf_literal = "001 ";
     
     //rank
     std::string r = std::to_string(this->raw_rank);
     
-    while(r.length() < 5) {
+    while(r.length() < 4) {
         r = " " + r;
     }
     
@@ -58,8 +58,8 @@ std::string RandomTournamentGenerator::RawPlayer::getTRFLiteral() {
     
     // name
     std::string n = this->raw_name;
-    while(n.length() < 48) {
-        n = " " + n;
+    while(n.length() <= 32) {
+        n += " ";
     }
     
     trf_literal += n;
@@ -79,28 +79,36 @@ std::string RandomTournamentGenerator::RawPlayer::getTRFLiteral() {
     if(pt.length() > 2) {
         pt = pt.substr(0, 3);
     }
+    while(pt.length() < 4) {
+        pt = " " + pt;
+    }
     trf_literal += pt;
     
     // final rank
     std::string frr = std::to_string(this->raw_final_rank);
-    while(frr.length() < 3) {
+    while(frr.length() < 4) {
         frr = " " + frr;
     }
     trf_literal += " " + frr;
     
     // games
     for(int i = 0; i < this->raw_games.size(); i++) {
-        trf_literal += "   " + this->raw_games[i];
+        std::string g = this->raw_games[i];
+        while(g.length() < 8) {
+            g = " " + g;
+        }
+//        trf_literal += "  " + this->raw_games[i];
+        trf_literal += "  " + g;
     }
     
     return trf_literal;
 }
 
-std::string RandomTournamentGenerator::trfString(int player_count, int rounds, std::vector<RandomTournamentGenerator::RawPlayer> players) {
+std::string RandomTournamentGenerator::trfString(int player_count, int rounds, const std::vector<RandomTournamentGenerator::RawPlayer> &players) {
     std::string trf_str = "";
     
     // set up basic info
-    trf_str = "012 CPP DUBOV SYSTEM RANDOM TOURNAMENT\r\n022 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (CITY)--\r\n032 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (FEDERATION)--\r\n042 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (START DATE)--\r\n052 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (END DATE)--\r\n062 " + std::to_string(player_count) + "\r\n072 " + std::to_string(player_count) + "\r\n082 0\r\n092 swiss Dubov\r\n102 --CPP DUBOV SYSTEM RANDOM TOURNAMENT; ARBITER (12345678)\r\n112 \r\n122 MOVES/TIME INCREMENT\r";
+    trf_str = "012 CPP DUBOV SYSTEM RANDOM TOURNAMENT\r\n022 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (CITY)--\r\n032 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (FEDERATION)--\r\n042 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (START DATE)--\r\n052 --CPP DUBOV SYSTEM RANDOM TOURNAMENT (END DATE)--\r\n062 " + std::to_string(player_count) + "\r\n072 " + std::to_string(player_count) + "\r\n082 0\r\n092 Individual FIDE Dubov\r\n102 --CPP DUBOV SYSTEM RANDOM TOURNAMENT; ARBITER (12345678)--\r\n112 \r\n122 MOVES/TIME INCREMENT\r";
     
     // check if we should add rounds
     if(rounds > 0) {

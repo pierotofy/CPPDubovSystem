@@ -53,11 +53,27 @@
       </BuildableProductRunnable>
       <CommandLineArguments>
          <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3.trf&quot;"
+            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/random2.trf&quot; --fpc_rounds 9"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/final test.trf&quot; --fpc_rounds 2"
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/parsing_test.trf&quot;"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--rtg &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/random3.trf&quot; --p_count 61 --rtg_rounds 10"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/baku_test.trf&quot; --fpc_rounds 3"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--fpc &quot;/Users/michael/Downloads/dubov1.trf&quot; --fpc_rounds 7"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/Test Dubov.trf&quot;"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
@@ -65,52 +81,16 @@
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-5.trf&quot;"
+            argument = "--fpc &quot;/Users/michael/Downloads/dubov.trf&quot; --fpc_rounds 6"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-4.trf&quot;"
+            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3.trf&quot; --fpc_rounds 5"
             isEnabled = "NO">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-3.trf&quot;"
+            argument = "--fpc &quot;/Users/michael/Downloads/dubov3.trf&quot; --fpc_rounds 5"
             isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test3-2.trf&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-5.trf&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-4.trf&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-3.trf"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2-2.trf"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--fpc &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2.trf&quot; --fpc_rounds 2"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test4.trf"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test.trf&quot;"
-            isEnabled = "NO">
-         </CommandLineArgument>
-         <CommandLineArgument
-            argument = "--pairings &quot;/Users/michael/Desktop/CPP Apps/DubovSystem/DubovSystem/tests/test2.trf&quot;"
-            isEnabled = "YES">
          </CommandLineArgument>
       </CommandLineArguments>
    </LaunchAction>

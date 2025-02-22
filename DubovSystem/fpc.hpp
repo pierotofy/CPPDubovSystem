@@ -36,21 +36,42 @@
  * Free pairings checker
  */
 namespace fpc {
-class RawMatch {
-public:
-    Player white;
-    Player black;
-    bool is_bye;
-    RawMatch(Player white, Player black, bool is_bye);
-};
+/**
+ * This is the core pairings checker class
+ */
 class PairingsChecker {
 private:
+    /**
+     * This is the string data of the tournament
+     */
     std::string rawTournamentData;
+    /**
+     * The round to check pairings for
+     */
     int target_round;
-    std::vector<PlayerDivider::Utils::TRFMatch> match_check;
-    std::vector<Match> games_expected;
-    std::map<int, Player> players_scaned;
+    /**
+     * All the games (completely processed) to compare. These are the pairings derived from the file
+     */
+    std::vector<CPPDubovSystem::Utils::TRFMatch> match_check;
+    /**
+     * The games we expect (checker pairings)
+     */
+    std::vector<CPPDubovSystem::Match> games_expected;
+    /**
+     * Any pairings that match\_check didn't have that existed in games\_expected
+     */
+    std::vector<CPPDubovSystem::Match> games_no_found;
+    /**
+     * Just a helper variable for quickly getting a player
+     */
+    std::map<int, CPPDubovSystem::Player> players_scaned;
+    /**
+     * Number of pairings (tournament pairings) that violated C1 (Two players shall not play each other more than once)
+     */
     int bad_opp = 0;
+    /**
+     * Number of pairings (tournament pairings) that violated C3 (Two players with the same absolute color preference shall not meet)
+     */
     int bad_color = 0;
     /**
      * For evaluating the raw matchs
@@ -60,7 +81,23 @@ public:
     /**
      * We initiate the raw tournament read from the TRF file, and we accept the parameter for the target round to check pairings for
      */
-    PairingsChecker(std::string rawTournament, int targetRound);
+    PairingsChecker(const std::string &rawTournament, int targetRound);
+    /**
+     * Copy not allowed
+     */
+    PairingsChecker(const PairingsChecker &pc) = delete;
+    /**
+     * Move not allowed
+     */
+    PairingsChecker(PairingsChecker &&pc) = delete;
+    /**
+     * Assignment not allowed
+     */
+    PairingsChecker &operator=(const PairingsChecker &pc) = delete;
+    /**
+     * Move assignment not allowed
+     */
+    PairingsChecker &operator=(PairingsChecker &&pc) = delete;
     /**
      * Returns the string representation of the report
      */
