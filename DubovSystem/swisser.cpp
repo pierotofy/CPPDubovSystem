@@ -50,22 +50,21 @@ int main(int argc, char **argv) {
         
         try{
             json j = json::parse(data);
-            int rounds = j["rounds"].get<int>();
-            std::cout << rounds << std::endl;
+            int rounds = j.at("rounds").get<int>();
 
             json games = json::array();
             if (j.contains("games")){
-                games = j["games"];
+                games = j.at("games");
             }
 
             CPPDubovSystem::Tournament tournament(rounds);
             std::unordered_map<std::string, CPPDubovSystem::Player> players;
             int id = 1;
 
-            for (const auto &p : j["players"]){
-                std::string name = p["name"].get<std::string>();
+            for (const auto &p : j.at("players")){
+                std::string name = p.at("name").get<std::string>();
                 CPPDubovSystem::Player player(name, 
-                                              p["elo"].get<int>(), id++, 0.0);
+                                              p.at("elo").get<int>(), id++, 0.0);
                 tournament.addPlayer(player);
                 players[name] = player;
             }
@@ -73,7 +72,7 @@ int main(int argc, char **argv) {
             // Replay game history (optional)
             for (const auto &results : games){
                 for (const auto &r: results){
-                    std::string white = r["white"].get<std::string>();
+                    std::string white = r.at("white").get<std::string>();
                     
                     std::string black = "";
                     if (r.contains("black")) black = r["black"].get<std::string>();
