@@ -1,7 +1,24 @@
+/**
+Swisser
+Copyright (C) 2025 Piero Toffanin
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 #include <iostream>
 #include <vector>
-#include "Tournament.hpp" // we need this to work with tournaments
-#include "Player.hpp" // we also need this to add players
+#include "Tournament.hpp"
+#include "Player.hpp"
 #include "httplib.h"
 #include "json.hpp"
 using json = nlohmann::json;
@@ -21,34 +38,13 @@ int main(int argc, char **argv) {
         }
     }
 
-    // // first make our tournament
-    
-    // // now we should add some players
-    // CPPDubovSystem::Player player2("Player 2", 1100, 2, 0.0);
-    // CPPDubovSystem::Player player3("Player 3", 1000, 3, 0.0);
-    // CPPDubovSystem::Player player4("Player 4", 900, 4, 0.0);
-    
-    // our_tournament.addPlayer(player1); // this is how to add the player to the tournament
-    // our_tournament.addPlayer(player2);
-    // our_tournament.addPlayer(player3);
-    // our_tournament.addPlayer(player4);
-    
-    // // now to get the pairings
-    // std::vector<CPPDubovSystem::Match> pairings = our_tournament.generatePairings(1); // we pass in the round to generate pairings for
-    
-    // for(int i = 0; i < pairings.size(); i++) {
-    //     CPPDubovSystem::Match match = pairings[i];
-    //     if(match.is_bye) {
-    //         std::cout << "BYE\n";
-    //     } else {
-    //         std::cout << "White: " << match.white.getName() << std::endl;
-    //         std::cout << "Black: " << match.black.getName() << std::endl;
-    //     }
-    // }
-
     svr.Get("/", [](const httplib::Request &, httplib::Response &res) {
         res.set_content("Swisser is running", "text/plain");
     });
+    svr.Get("/ping", [](const httplib::Request &, httplib::Response &res) {
+        res.set_content(json( {{"swisser", "running"}}).dump(), "application/json");
+    });
+    
     svr.Post("/round", [](const httplib::Request &req, httplib::Response &res) {
         std::string data = req.get_param_value("data");
         
