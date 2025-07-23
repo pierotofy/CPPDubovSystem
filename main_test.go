@@ -179,6 +179,10 @@ func TestExampleJSONPairing(t *testing.T) {
 	tournament.AddPlayer(player2)
 	tournament.AddPlayer(player3)
 	
+	// Debug: print initial points
+	t.Logf("Initial points: player1=%.1f, player2=%.1f, player3=%.1f", 
+		player1.Points, player2.Points, player3.Points)
+	
 	// Replay first round exactly as in example.json
 	// player1 (white) beat player2 (black) with result 1.0
 	player1.AddColor(White)
@@ -188,13 +192,17 @@ func TestExampleJSONPairing(t *testing.T) {
 	player1.AddOppRating(player2.Rating)
 	player2.AddOppRating(player1.Rating)
 	player1.AddPoints(1.0) // player1 won (result 1.0)
-	// player2 gets 0 points (result 0.0 for black when white wins)
+	// player2 gets 0 points (result 0.0 for black when white wins - no need to add points)
 	
 	// player3 had a bye
 	player3.SetByeStatus(true)
 	player3.AddPoints(1.0) // bye gives 1 point
 	
-	// Now both player1 and player3 have 1.0 points, player2 has 0.0 points
+	// Debug: print points after first round
+	t.Logf("Points after round 1: player1=%.1f, player2=%.1f, player3=%.1f", 
+		player1.Points, player2.Points, player3.Points)
+	
+	// Now player1 and player3 have 1.0 points, player2 has 0.0 points
 	// Generate pairings for round 2
 	pairings, err := tournament.GeneratePairings(2)
 	if err != nil {

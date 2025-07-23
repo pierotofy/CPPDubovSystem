@@ -116,8 +116,7 @@ func (t *Tournament) makeRound1() []*Match {
 	// Handle odd number of players (bye for last player)
 	if len(sortedPlayers)%2 == 1 {
 		byePlayer := sortedPlayers[len(sortedPlayers)-1]
-		byePlayer.SetByeStatus(true)
-		byePlayer.AddPoints(1.0) // Bye gives 1 point
+		// Don't add points here - that happens when results are recorded
 		matches = append(matches, NewMatch(byePlayer, nil, true))
 	}
 
@@ -186,8 +185,7 @@ func (t *Tournament) makePairingForGroup(group []*Player, round int) []*Match {
 	// Handle single player (gets bye or floats)
 	if len(group) == 1 {
 		player := group[0]
-		player.SetByeStatus(true)
-		player.AddPoints(1.0)
+		// Don't add points here - that happens when results are recorded
 		return []*Match{NewMatch(player, nil, true)}
 	}
 	
@@ -203,8 +201,7 @@ func (t *Tournament) makePairingForGroup(group []*Player, round int) []*Match {
 	})
 	
 	byePlayer := group[len(group)-1]
-	byePlayer.SetByeStatus(true)
-	byePlayer.AddPoints(1.0)
+	// Don't add points here - that happens when results are recorded
 	
 	remainingGroup := group[:len(group)-1]
 	matches := t.pairEvenGroup(remainingGroup)
