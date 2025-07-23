@@ -115,6 +115,7 @@ int main(int argc, char **argv) {
                     }
 
                     if (bye){
+                        w.addPoints(1.0);
                         w.setByeStatus(true);
                     }
                 }
