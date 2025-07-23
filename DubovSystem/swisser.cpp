@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
                     // White played white
                     if (!bye) w.addColor(CPPDubovSystem::Color::WHITE);
 
-                    if (!black.empty()){
+                    if (!black.empty() && !bye){
                         auto b = players[black];
 
                         // Black played black
