@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 # Project name and version
-project(CPPDubovSystem VERSION 1.0)
+project(swisser VERSION 1.0)
 
 # Set C++ standard
 set(CMAKE_CXX_STANDARD 20)
@@ -12,7 +12,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
 
 # Define source files based on build.sh
 set(SOURCES
-    DubovSystem/main.cpp
+    DubovSystem/swisser.cpp
     "DubovSystem/graph util/Graph.cpp"
     "DubovSystem/graph util/BinaryHeap.cpp"
     "DubovSystem/graph util/Matching.cpp"
@@ -27,10 +27,10 @@ set(SOURCES
 )
 
 # Create the executable
-add_executable(CPPDubovSystem ${SOURCES})
+add_executable(swisser ${SOURCES})
 
 # Set include directories
-target_include_directories(CPPDubovSystem PRIVATE
+target_include_directories(swisser PRIVATE
     DubovSystem
     "DubovSystem/graph util"
     "DubovSystem/csv util"
