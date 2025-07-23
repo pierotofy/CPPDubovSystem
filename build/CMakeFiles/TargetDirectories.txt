@@ -1,0 +1,3 @@
+/home/runner/work/swisser/swisser/build/CMakeFiles/swisser.dir
+/home/runner/work/swisser/swisser/build/CMakeFiles/edit_cache.dir
+/home/runner/work/swisser/swisser/build/CMakeFiles/rebuild_cache.dir
