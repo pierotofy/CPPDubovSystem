@@ -75,7 +75,6 @@ int main(int argc, char **argv) {
                 std::string name = p.at("name").get<std::string>();
                 CPPDubovSystem::Player player(name, 
                                               p.at("elo").get<int>(), id++, 0.0);
-                tournament.addPlayer(player);
                 players[name] = player;
             }
             
@@ -93,45 +92,49 @@ int main(int argc, char **argv) {
                     if (r.contains("result")) result = r["result"].get<float>();
                     
                     
-                    auto w = players[white];
+                    auto w = &players[white];
                     // White played white
-                    if (!bye) w.addColor(CPPDubovSystem::Color::WHITE);
+                    if (!bye) w->addColor(CPPDubovSystem::Color::WHITE);
 
                     if (!black.empty() && !bye){
-                        auto b = players[black];
+                        auto b = &players[black];
 
                         // Black played black
-                        b.addColor(CPPDubovSystem::Color::BLACK);
+                        b->addColor(CPPDubovSystem::Color::BLACK);
 
                         // They played each other
-                        w.addOpp(b.getID());
-                        w.addOppRating(b.getRating());
+                        w->addOpp(b->getID());
+                        w->addOppRating(b->getRating());
 
-                        b.addOpp(w.getID());
-                        b.addOppRating(w.getRating());
+                        b->addOpp(w->getID());
+                        b->addOppRating(w->getRating());
 
                         // White won
                         if (result == 1.0){
-                            w.addPoints(1.0);
+                            w->addPoints(1.0);
                         // Draw
                         }else if (result == 0.5){
-                            w.addPoints(0.5);
-                            b.addPoints(0.5);
+                            w->addPoints(0.5);
+                            b->addPoints(0.5);
                         // Black won
                         }else if (result == 0.0){
-                            b.addPoints(1.0);
+                            b->addPoints(1.0);
                         }
                         
                     }
 
                     if (bye){
-                        w.addPoints(1.0);
-                        w.setByeStatus(true);
+                        w->addPoints(1.0);
+                        w->setByeStatus(true);
                     }
                 }
             }
+
             
             int nextRound = games.size() + 1;
+            for (auto &p : players){
+                tournament.addPlayer(p.second);
+            }
             std::vector<CPPDubovSystem::Match> pairings = tournament.generatePairings(nextRound);
             
             json pairs = json::array();
