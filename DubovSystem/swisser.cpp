@@ -27,14 +27,20 @@ int main(int argc, char **argv) {
     httplib::Server svr;
     std::string host = "0.0.0.0";
     int port = 8080;
+    bool verbose = false;
 
     for (int i = 1; i < argc; i++) {
-        if (std::string(argv[i]) == "--host" && i + 1 < argc) {
+        std::string param = std::string(argv[i]);
+
+        if ((param == "--host" || param == "-h") && i + 1 < argc) {
             host = argv[i + 1];
-            i++; // Skip next argument since we used it
-        } else if (std::string(argv[i]) == "--port" && i + 1 < argc) {
+            i++; 
+        } else if ((param == "--port" || param == "-p") && i + 1 < argc) {
             port = std::stoi(argv[i + 1]);
-            i++; // Skip next argument since we used it
+            i++;
+        } else if (param == "--verbose" || param == "-v"){
+            verbose = true;
+            std::cout << "Verbose mode: on" << std::endl;
         }
     }
 
@@ -45,8 +51,12 @@ int main(int argc, char **argv) {
         res.set_content(json( {{"swisser", "running"}}).dump(), "application/json");
     });
     
-    svr.Post("/round", [](const httplib::Request &req, httplib::Response &res) {
+    svr.Post("/round", [&verbose](const httplib::Request &req, httplib::Response &res) {
         std::string data = req.get_param_value("data");
+
+        if (verbose){
+            std::cout << "POST /round " << data << std::endl;
+        }
         
         try{
             json j = json::parse(data);
@@ -138,13 +148,23 @@ int main(int argc, char **argv) {
                 }
                 pairs.push_back(m);
             }
-
-            res.set_content(pairs.dump(), "application/json");
+            
+            std::string out = pairs.dump();
+            if (verbose){
+                std::cout << "--> " << out << std::endl;
+            }
+            
+            res.set_content(out, "application/json");
         }catch (const std::exception& e) {
             json j;
             j["error"] = e.what();
+            std::string out = j.dump();
+            if (verbose){
+                std::cout << "--> " << out << std::endl;
+            }
+
             res.status = httplib::StatusCode::BadRequest_400;
-            res.set_content(j.dump(), "application/json");
+            res.set_content(out, "application/json");
         }
         
     });
