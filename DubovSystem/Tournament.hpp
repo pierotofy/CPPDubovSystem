@@ -333,6 +333,10 @@ private:
      */
     std::vector<Match> makeRound1();
     /**
+     * Make round robin round
+     */
+    std::vector<Match> makeRoundRobinRound(int pairing_round);
+    /**
      * Makes the groups for the players
      */
     LinkedList makeGroups() const;
