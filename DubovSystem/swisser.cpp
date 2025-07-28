@@ -69,6 +69,7 @@ int main(int argc, char **argv) {
 
             CPPDubovSystem::Tournament tournament(rounds);
             std::unordered_map<std::string, CPPDubovSystem::Player> players;
+            std::unordered_map<std::string, int> byeCounts;
             int id = 1;
 
             for (const auto &p : j.at("players")){
@@ -125,12 +126,29 @@ int main(int argc, char **argv) {
 
                     if (bye){
                         w->addPoints(1.0);
-                        w->setByeStatus(true);
+
+                        // Allow multiple byes
+                        if (byeCounts.count(white)) byeCounts[white] += 1;
+                        else byeCounts[white] = 1;
+
+                        // w->setByeStatus(true);
                     }
                 }
             }
-
             
+            // E.g. if 3 players have [1, 2, 1] byes
+            // only set bye to the second player
+            int minByeCount = 999999;
+            for (const auto &b : byeCounts){
+                minByeCount = std::min(minByeCount, b.second);
+            }
+            for (const auto &b : byeCounts){
+                if (b.second - minByeCount > 0){
+                    auto w = &players[b.first];
+                    w->setByeStatus(true);
+                } 
+            }
+
             int nextRound = games.size() + 1;
             for (auto &p : players){
                 tournament.addPlayer(p.second);
