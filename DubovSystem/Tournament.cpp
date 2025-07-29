@@ -2380,7 +2380,21 @@ std::vector<CPPDubovSystem::Match> CPPDubovSystem::Tournament::makeRoundRobinRou
 
     int playerCount = getPlayerCount();
     bool odd = playerCount % 2 != 0;
-    int tableIdx = odd ? playerCount + 1 : playerCount; 
+    int tableIdx = odd ? playerCount + 1 : playerCount;
+
+    if (playerCount <= 1){
+        throw std::invalid_argument("Cannot make a round with less than 2 players");
+    }
+
+    // Trivial case for two players
+    if (playerCount == 2){
+        if (pairing_round % 2 == 0){
+            games.push_back(Match(players[1], players[0], false));
+        }else{
+            games.push_back(Match(players[0], players[1], false));
+        }
+        return games;
+    }
 
     // Build berger table as indicated on https://handbook.fide.com/chapter/C05Annex1
 
